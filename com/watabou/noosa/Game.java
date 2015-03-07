@@ -264,12 +264,15 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 		
 		if (requestedReset) {
 			requestedReset = false;
-			try {
-				requestedScene = sceneClass.newInstance();
-				switchScene();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+
+            try {
+                requestedScene = sceneClass.newInstance();
+                switchScene();
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
+
 		}
 		
 		update();
