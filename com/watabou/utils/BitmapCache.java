@@ -108,7 +108,7 @@ public class BitmapCache {
 	}
 	
 	@SuppressWarnings("serial")
-	private static class Layer extends HashMap<Object,Bitmap> {	
+	private static class Layer extends HashMap<Object,Bitmap> {
 		
 		@Override
 		public void clear() {

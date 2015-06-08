@@ -57,7 +57,7 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 	public static float density = 1;
 	
 	public static String version;
-    public static int versionCode;
+	public static int versionCode;
 	
 	// Current scene
 	protected Scene scene;
@@ -70,12 +70,12 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 	
 	// Current time in milliseconds
 	protected long now;
-	// Milliseconds passed since previous update 
+	// Milliseconds passed since previous update
 	protected long step;
 	
 	public static float timeScale = 1f;
 	public static float elapsed = 0f;
-    public static float timeTotal = 0f;
+	public static float timeTotal = 0f;
 	
 	protected GLSurfaceView view;
 	protected SurfaceHolder holder;
@@ -106,11 +106,11 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 		} catch (NameNotFoundException e) {
 			version = "???";
 		}
-        try {
-            versionCode = getPackageManager().getPackageInfo( getPackageName(), 0 ).versionCode;
-        } catch (NameNotFoundException e) {
-            versionCode = 0;
-        }
+		try {
+			versionCode = getPackageManager().getPackageInfo( getPackageName(), 0 ).versionCode;
+		} catch (NameNotFoundException e) {
+			versionCode = 0;
+		}
 		
 		setVolumeControlStream( AudioManager.STREAM_MUSIC );
 		
@@ -169,7 +169,7 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 	@Override
 	public boolean onKeyDown( int keyCode, KeyEvent event ) {
 		
-		if (keyCode == Keys.VOLUME_DOWN || 
+		if (keyCode == Keys.VOLUME_DOWN ||
 			keyCode == Keys.VOLUME_UP) {
 			
 			return false;
@@ -184,7 +184,7 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 	@Override
 	public boolean onKeyUp( int keyCode, KeyEvent event ) {
 		
-		if (keyCode == Keys.VOLUME_DOWN || 
+		if (keyCode == Keys.VOLUME_DOWN ||
 			keyCode == Keys.VOLUME_UP) {
 			
 			return false;
@@ -265,12 +265,12 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 		if (requestedReset) {
 			requestedReset = false;
 
-            try {
-                requestedScene = sceneClass.newInstance();
-                switchScene();
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
+			try {
+				requestedScene = sceneClass.newInstance();
+				switchScene();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
 
 
 		}
@@ -294,12 +294,12 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 		
 		Game.elapsed = 0f;
 		Game.timeScale = 1f;
-        Game.timeTotal = 0f;
+		Game.timeTotal = 0f;
 	}
 	
 	protected void update() {
 		Game.elapsed = Game.timeScale * step * 0.001f;
-        Game.timeTotal += Game.elapsed;
+		Game.timeTotal += Game.elapsed;
 		
 		synchronized (motionEvents) {
 			Touchscreen.processTouchEvents( motionEvents );

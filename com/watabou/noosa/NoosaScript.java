@@ -100,10 +100,10 @@ public class NoosaScript extends Script {
 		vertices.position( 2 );
 		aUV.vertexPointer( 2, 4, vertices );
 
-		GLES20.glDrawElements( 
-			GLES20.GL_TRIANGLES, 
-			Quad.SIZE * size, 
-			GLES20.GL_UNSIGNED_SHORT, 
+		GLES20.glDrawElements(
+			GLES20.GL_TRIANGLES,
+			Quad.SIZE * size,
+			GLES20.GL_UNSIGNED_SHORT,
 			Quad.getIndices( size ) );
 		
 	}
@@ -125,10 +125,10 @@ public class NoosaScript extends Script {
 			lastCamera = camera;
 			uCamera.valueM4( camera.matrix );
 			
-			GLES20.glScissor( 
-				camera.x, 
-				Game.height - camera.screenHeight - camera.y, 
-				camera.screenWidth, 
+			GLES20.glScissor(
+				camera.x,
+				Game.height - camera.screenHeight - camera.y,
+				camera.screenWidth,
 				camera.screenHeight );
 		}
 	}

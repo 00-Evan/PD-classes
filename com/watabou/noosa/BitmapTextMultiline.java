@@ -37,7 +37,7 @@ public class BitmapTextMultiline extends BitmapText {
 	public boolean[] mask;
 	
 	public BitmapTextMultiline( Font font ) {
-		this( "", font ); 
+		this( "", font );
 	}
 	
 	public BitmapTextMultiline( String text, Font font ) {
@@ -80,7 +80,7 @@ public class BitmapTextMultiline extends BitmapText {
 				}
 				
 				
-				getWordMetrics( word, metrics );	
+				getWordMetrics( word, metrics );
 				writer.addSymbol( metrics.x, metrics.y );
 				
 				int length = word.length();
@@ -171,7 +171,7 @@ public class BitmapTextMultiline extends BitmapText {
 					continue;
 				}
 				
-				getWordMetrics( word, metrics );	
+				getWordMetrics( word, metrics );
 				writer.addSymbol( metrics.x, metrics.y );
 				writer.addSpace( spaceSize );
 			}
@@ -276,7 +276,7 @@ public class BitmapTextMultiline extends BitmapText {
 						continue;
 					}
 					
-					getWordMetrics( word, metrics );	
+					getWordMetrics( word, metrics );
 
 					if (curLineWidth > 0 && curLineWidth + font.tracking + metrics.x > maxWidth / scale.x) {
 						newLine( word, metrics.x );				

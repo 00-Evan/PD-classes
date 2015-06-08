@@ -99,11 +99,11 @@ public class Bundle {
 			}
 		} catch (ClassNotFoundException|InstantiationException|IllegalAccessException e ) {
 			return null;
-		}	
+		}
 	}
 	
 	public Bundlable get( String key ) {
-		return getBundle( key ).get();	
+		return getBundle( key ).get();
 	}
 	
 	public <E extends Enum<E>> E getEnum( String key, Class<E> enumClass ) {
@@ -273,11 +273,11 @@ public class Bundle {
 		JSONArray array = new JSONArray();
 		for (Bundlable object : collection) {
 			if (object != null) {
-                Bundle bundle = new Bundle();
-                bundle.put(CLASS_NAME, object.getClass().getName());
-                object.storeInBundle(bundle);
-                array.put(bundle.data);
-            }
+				Bundle bundle = new Bundle();
+				bundle.put(CLASS_NAME, object.getClass().getName());
+				object.storeInBundle(bundle);
+				array.put(bundle.data);
+			}
 		}
 		try {
 			data.put( key, array );
@@ -312,7 +312,7 @@ public class Bundle {
 	
 	public static boolean write( Bundle bundle, OutputStream stream ) {
 		try {
-			BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( stream ) );	
+			BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( stream ) );
 			writer.write( bundle.data.toString() );
 			writer.close();
 			

@@ -42,18 +42,18 @@ public enum Sample implements SoundPool.OnLoadCompleteListener {
 
 	private boolean enabled = true;
 
-    private LinkedList<String> loadingQueue = new LinkedList<String>();
+	private LinkedList<String> loadingQueue = new LinkedList<String>();
 
 	public void reset() {
 
-        ids.clear();
-        loadingQueue = new LinkedList<String>();
+		ids.clear();
+		loadingQueue = new LinkedList<String>();
 		pool.release();
 
 		pool = new SoundPool( MAX_STREAMS, AudioManager.STREAM_MUSIC, 0 );
 		pool.setOnLoadCompleteListener( this );
 
-    }
+	}
 
 	public void pause() {
 		if (pool != null) {

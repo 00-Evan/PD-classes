@@ -90,14 +90,14 @@ public class Texture {
 		imageBuffer.position( 0 );
 		
 		GLES20.glTexImage2D(
-			GLES20.GL_TEXTURE_2D, 
-			0, 
-			GLES20.GL_RGBA, 
-			w, 
-			h, 
-			0, 
-			GLES20.GL_RGBA, 
-			GLES20.GL_UNSIGNED_BYTE, 
+			GLES20.GL_TEXTURE_2D,
+			0,
+			GLES20.GL_RGBA,
+			w,
+			h,
+			0,
+			GLES20.GL_RGBA,
+			GLES20.GL_UNSIGNED_BYTE,
 			imageBuffer );
 	}
 	
@@ -112,16 +112,16 @@ public class Texture {
 		imageBuffer.position( 0 );
 		
 		GLES20.glPixelStorei( GLES20.GL_UNPACK_ALIGNMENT, 1 );
-	    
+
 		GLES20.glTexImage2D(
-			GLES20.GL_TEXTURE_2D, 
-			0, 
-			GLES20.GL_ALPHA, 
-			w, 
-			h, 
-			0, 
-			GLES20.GL_ALPHA, 
-			GLES20.GL_UNSIGNED_BYTE, 
+			GLES20.GL_TEXTURE_2D,
+			0,
+			GLES20.GL_ALPHA,
+			w,
+			h,
+			0,
+			GLES20.GL_ALPHA,
+			GLES20.GL_UNSIGNED_BYTE,
 			imageBuffer );
 	}
 	
@@ -132,7 +132,7 @@ public class Texture {
 		int w = bitmap.getWidth();
 		int h = bitmap.getHeight();
 		
-		int[] pixels = new int[w * h]; 
+		int[] pixels = new int[w * h];
 		bitmap.getPixels( pixels, 0, w, 0, 0, w, h );
 
 		// recode - components reordering is needed

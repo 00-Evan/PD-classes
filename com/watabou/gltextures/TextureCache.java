@@ -128,12 +128,12 @@ public class TextureCache {
 		try {
 			if (src instanceof Integer){
 				
-				return BitmapFactory.decodeResource( 
+				return BitmapFactory.decodeResource(
 					context.getResources(), (Integer)src, bitmapOptions );
 				
 			} else if (src instanceof String) {
 				
-				return BitmapFactory.decodeStream( 
+				return BitmapFactory.decodeStream(
 					context.getAssets().open( (String)src ), null, bitmapOptions );
 				
 			} else if (src instanceof Bitmap) {
