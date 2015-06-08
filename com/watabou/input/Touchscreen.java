@@ -61,7 +61,7 @@ public class Touchscreen {
 				
 			case MotionEvent.ACTION_MOVE:
 				int count = e.getPointerCount();
-				for (int j=0; j < count; j++) {		
+				for (int j=0; j < count; j++) {
 					pointers.get( e.getPointerId( j ) ).update( e, j );
 				}
 				event.dispatch( null );

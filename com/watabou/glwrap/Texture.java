@@ -138,7 +138,7 @@ public class Texture {
 		// recode - components reordering is needed
 		if (recode) {
 			for (int i=0; i < pixels.length; i++) {
-				int color = pixels[i];		
+				int color = pixels[i];
 				int ag = color & 0xFF00FF00;
 				int r = (color >> 16) & 0xFF;
 				int b = color & 0xFF;

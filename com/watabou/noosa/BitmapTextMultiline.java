@@ -259,7 +259,7 @@ public class BitmapTextMultiline extends BitmapText {
 		public ArrayList<BitmapText> split() {
 			
 			lines = new ArrayList<BitmapText>();
-					 
+
 			curLine = new StringBuilder();
 			curLineWidth = 0;
 			
@@ -279,14 +279,14 @@ public class BitmapTextMultiline extends BitmapText {
 					getWordMetrics( word, metrics );
 
 					if (curLineWidth > 0 && curLineWidth + font.tracking + metrics.x > maxWidth / scale.x) {
-						newLine( word, metrics.x );				
-					} else {				
-						append( word,  metrics.x );			
+						newLine( word, metrics.x );
+					} else {
+						append( word,  metrics.x );
 					}
 					
-					if (curLineWidth > 0 && curLineWidth + font.tracking + spaceSize > maxWidth / scale.x) {						
-						newLine( "", 0 );				
-					} else {		
+					if (curLineWidth > 0 && curLineWidth + font.tracking + spaceSize > maxWidth / scale.x) {
+						newLine( "", 0 );
+					} else {
 						append( " ", spaceSize );
 					}
 				}

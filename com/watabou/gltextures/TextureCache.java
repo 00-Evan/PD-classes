@@ -120,7 +120,7 @@ public class TextureCache {
 	public static void reload() {
 		for (SmartTexture tx:all.values()) {
 			tx.reload();
-		}		
+		}
 	}
 	
 	public static Bitmap getBitmap( Object src ) {

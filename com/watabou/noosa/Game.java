@@ -310,7 +310,7 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 			keysEvents.clear();
 		}
 		
-		scene.update();		
+		scene.update();
 		Camera.updateAll();
 	}
 	
