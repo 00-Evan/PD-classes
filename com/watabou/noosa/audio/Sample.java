@@ -41,6 +41,7 @@ public enum Sample implements SoundPool.OnLoadCompleteListener {
 			new HashMap<Object, Integer>();
 
 	private boolean enabled = true;
+	private float volume = 1f;
 
 	private LinkedList<String> loadingQueue = new LinkedList<String>();
 
@@ -128,7 +129,7 @@ public enum Sample implements SoundPool.OnLoadCompleteListener {
 	}
 
 	public int play( Object id ) {
-		return play( id, 1, 1, 1 );
+		return play( id, volume );
 	}
 
 	public int play( Object id, float volume ) {
@@ -145,6 +146,10 @@ public enum Sample implements SoundPool.OnLoadCompleteListener {
 
 	public void enable( boolean value ) {
 		enabled = value;
+	}
+
+	public void volume( float value ) {
+		this.volume = value;
 	}
 
 	public boolean isEnabled() {
