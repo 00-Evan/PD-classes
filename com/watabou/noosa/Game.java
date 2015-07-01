@@ -116,7 +116,7 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 		
 		view = new GLSurfaceView( this );
 		view.setEGLContextClientVersion( 2 );
-		view.setEGLConfigChooser( false );
+		view.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 		view.setRenderer( this );
 		view.setOnTouchListener( this );
 		setContentView( view );
@@ -244,7 +244,7 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 			scene = null;
 		}
 		
-		instance = null;
+		//instance = null;
 	}
 	
 	public static void resetScene() {
