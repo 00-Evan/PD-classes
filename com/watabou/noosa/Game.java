@@ -224,6 +224,8 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 		Game.width = width;
 		Game.height = height;
 
+		resetScene();
+
 	}
 
 	@Override
