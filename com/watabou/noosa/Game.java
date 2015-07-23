@@ -218,14 +218,16 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 
 	@Override
 	public void onSurfaceChanged( GL10 gl, int width, int height ) {
-		
-		GLES20.glViewport( 0, 0, width, height );
-		
-		Game.width = width;
-		Game.height = height;
 
-		resetScene();
+		if (height != Game.height || width != Game.width) {
 
+			GLES20.glViewport(0, 0, width, height);
+
+			Game.width = width;
+			Game.height = height;
+
+			resetScene();
+		}
 	}
 
 	@Override
