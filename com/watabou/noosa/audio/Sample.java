@@ -129,7 +129,7 @@ public enum Sample implements SoundPool.OnLoadCompleteListener {
 	}
 
 	public int play( Object id ) {
-		return play( id, volume );
+		return play( id, 1 );
 	}
 
 	public int play( Object id, float volume ) {
@@ -138,7 +138,7 @@ public enum Sample implements SoundPool.OnLoadCompleteListener {
 
 	public int play( Object id, float leftVolume, float rightVolume, float rate ) {
 		if (enabled && ids.containsKey( id )) {
-			return pool.play( ids.get( id ), leftVolume, rightVolume, 0, 0, rate );
+			return pool.play( ids.get( id ), leftVolume*volume, rightVolume*volume, 0, 0, rate );
 		} else {
 			return -1;
 		}
