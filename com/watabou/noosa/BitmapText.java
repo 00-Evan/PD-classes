@@ -261,7 +261,10 @@ public class BitmapText extends Visual {
 			
 			lineHeight = baseLine = height;
 		}
-		
+
+		//FIXME!!
+		//this logic is fairly obtuse and was modified hastily to add support for multiple lines in
+		//the bitmap as a fix for 0.3.1c, needs to be rewritten to be more clear.
 		protected void splitBy( Bitmap bitmap, int height, int color, String chars ) {
 			
 			autoUppercase = chars.equals( LATIN_UPPER );
@@ -271,6 +274,7 @@ public class BitmapText extends Visual {
 			float vHeight = (float)height / bitmap.getHeight();
 			
 			int pos;
+			int line = 0;
 			
 		spaceMeasuring:
 			for (pos=0; pos <  width; pos++) {
@@ -281,6 +285,8 @@ public class BitmapText extends Visual {
 				}
 			}
 			add( ' ', new RectF( 0, 0, (float)pos / width, vHeight ) );
+
+			int separator = pos;
 			
 			for (int i=0; i < length; i++) {
 				
@@ -290,14 +296,17 @@ public class BitmapText extends Visual {
 				} else {
 					
 					boolean found;
-					int separator = pos;
+					int start = separator;
 					
 					do {
 						if (++separator >= width) {
-							break;
+							line += height;
+							separator = start = 0;
+							if (line + height >= bitmap.getHeight())
+								break;
 						}
 						found = true;
-						for (int j=0; j < height; j++) {
+						for (int j=line; j < line + height; j++) {
 							if (bitmap.getPixel( separator, j ) != color) {
 								found = false;
 								break;
@@ -305,8 +314,8 @@ public class BitmapText extends Visual {
 						}
 					} while (!found);
 					
-					add( ch, new RectF( (float)pos / width, 0, (float)separator / width, vHeight ) );
-					pos = separator + 1;
+					add( ch, new RectF( (float)start / width, (float)line / bitmap.getHeight(), (float)separator / width, vHeight*((line+height)/height) ) );
+					separator++;
 				}
 			}
 			
