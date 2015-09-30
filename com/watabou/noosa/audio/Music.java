@@ -32,7 +32,7 @@ public enum Music implements MediaPlayer.OnPreparedListener, MediaPlayer.OnError
 	private MediaPlayer player;
 	
 	private String lastPlayed;
-	private boolean lastLooping;
+	private boolean looping;
 	
 	private boolean enabled = true;
 	
@@ -45,8 +45,8 @@ public enum Music implements MediaPlayer.OnPreparedListener, MediaPlayer.OnError
 		stop();
 		
 		lastPlayed = assetName;
-		lastLooping = looping;
-		
+		this.looping = looping;
+
 		if (!enabled || assetName == null) {
 			return;
 		}
@@ -60,7 +60,6 @@ public enum Music implements MediaPlayer.OnPreparedListener, MediaPlayer.OnError
 			player.setDataSource( afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength() );
 			player.setOnPreparedListener( this );
 			player.setOnErrorListener( this );
-			player.setLooping( looping );
 			player.prepareAsync();
 			
 		} catch (IOException e) {
@@ -79,6 +78,7 @@ public enum Music implements MediaPlayer.OnPreparedListener, MediaPlayer.OnError
 	@Override
 	public void onPrepared( MediaPlayer player ) {
 		player.start();
+		player.setLooping(looping);
 	}
 	
 	@Override
@@ -99,6 +99,7 @@ public enum Music implements MediaPlayer.OnPreparedListener, MediaPlayer.OnError
 	public void resume() {
 		if (player != null) {
 			player.start();
+			player.setLooping(looping);
 		}
 	}
 	
@@ -126,7 +127,7 @@ public enum Music implements MediaPlayer.OnPreparedListener, MediaPlayer.OnError
 			stop();
 		} else
 		if (!isPlaying() && value) {
-			play( lastPlayed, lastLooping );
+			play( lastPlayed, looping );
 		}
 	}
 	
