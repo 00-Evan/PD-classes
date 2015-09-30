@@ -284,7 +284,7 @@ public class BitmapText extends Visual {
 					}
 				}
 			}
-			add( ' ', new RectF( 0, 0, (float)pos / width, vHeight ) );
+			add( ' ', new RectF( 0, 0, (float)pos / width, vHeight-0.01f ) );
 
 			int separator = pos;
 			
