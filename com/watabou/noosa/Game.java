@@ -169,9 +169,8 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 	@Override
 	public boolean onKeyDown( int keyCode, KeyEvent event ) {
 		
-		if (keyCode == Keys.VOLUME_DOWN ||
-			keyCode == Keys.VOLUME_UP) {
-			
+		if (keyCode != Keys.BACK &&
+				keyCode != Keys.MENU) {
 			return false;
 		}
 		
@@ -183,10 +182,9 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 	
 	@Override
 	public boolean onKeyUp( int keyCode, KeyEvent event ) {
-		
-		if (keyCode == Keys.VOLUME_DOWN ||
-			keyCode == Keys.VOLUME_UP) {
-			
+
+		if (keyCode != Keys.BACK &&
+				keyCode != Keys.MENU) {
 			return false;
 		}
 		

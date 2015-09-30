@@ -27,8 +27,6 @@ public class Keys {
 	
 	public static final int BACK		= KeyEvent.KEYCODE_BACK;
 	public static final int MENU		= KeyEvent.KEYCODE_MENU;
-	public static final int VOLUME_UP	= KeyEvent.KEYCODE_VOLUME_UP;
-	public static final int VOLUME_DOWN	= KeyEvent.KEYCODE_VOLUME_DOWN;
 
 	public static Signal<Key> event = new Signal<Key>( true );
 	
