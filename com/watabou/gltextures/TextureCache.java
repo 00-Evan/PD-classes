@@ -33,7 +33,7 @@ public class TextureCache {
 
 	public static Context context;
 	
-	private static HashMap<Object,SmartTexture> all = new HashMap<Object, SmartTexture>();
+	private static HashMap<Object,SmartTexture> all = new HashMap<>();
 	
 	// No dithering, no scaling, 32 bits per pixel
 	private static BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
@@ -44,7 +44,7 @@ public class TextureCache {
 	}
 
 	public static SmartTexture createSolid( int color ) {
-		String key = "1x1:" + color;
+		final String key = "1x1:" + color;
 		
 		if (all.containsKey( key )) {
 			
@@ -64,7 +64,7 @@ public class TextureCache {
 	
 	public static SmartTexture createGradient( int width, int height, int... colors ) {
 		
-		String key = "" + width + "x" + height + ":" + colors;
+		final String key = "" + width + "x" + height + ":" + colors;
 		
 		if (all.containsKey( key )) {
 			
