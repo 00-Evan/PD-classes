@@ -51,12 +51,12 @@ public class TouchArea extends Visual implements Signal.Listener<Touchscreen.Tou
 			return;
 		}
 		
-		boolean hit = touch != null && target.overlapsScreenPoint( (int)touch.start.x, (int)touch.start.y );
+		boolean hit = touch != null && target.overlapsScreenPoint( (int)touch.current.x, (int)touch.current.y );
 		
 		if (hit) {
 
-			Touchscreen.event.cancel();
-			
+			if (touch.down || touch == this.touch) Touchscreen.event.cancel();
+
 			if (touch.down) {
 				
 				if (this.touch == null) {
@@ -81,7 +81,7 @@ public class TouchArea extends Visual implements Signal.Listener<Touchscreen.Tou
 				onDrag( this.touch );
 			}
 			
-			else if (this.touch != null && touch != null && !touch.down) {
+			else if (this.touch != null && !touch.down) {
 				onTouchUp( touch );
 				this.touch = null;
 			}
