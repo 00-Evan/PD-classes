@@ -73,50 +73,29 @@ public class RenderedText extends Image {
 			texture = TextureCache.get("text:" + size + " " + text);
 			frame(sizeCache.get("text:" + size + " " + text));
 		} else {
-			Bitmap bitmap = Bitmap.createBitmap((int)(size * text.length() * 1.1f), (int) (size * 1.25f), Bitmap.Config.ARGB_4444);
-			bitmap.eraseColor(0x00000000);
 
 			Paint strokePaint = new Paint();
 			strokePaint.setARGB(0xff, 0, 0, 0);
 			strokePaint.setTextSize(size);
 			strokePaint.setStyle(Paint.Style.STROKE);
-			//strokePaint.setTextScaleX(0.9f);
+			strokePaint.setAntiAlias(true);
 			strokePaint.setStrokeWidth(size / 5);
 
 			Paint textPaint = new Paint();
 			textPaint.setTextSize(size);
 			textPaint.setARGB(0xff, 0xff, 0xff, 0xff);
-			//textPaint.setTextScaleX(0.9f);
+			textPaint.setAntiAlias(true);
+
+			int right = (int)(strokePaint.measureText(text)+ (size/10));
+			int bottom = (int)(-strokePaint.ascent() + strokePaint.descent()+ (size/10));
+			Bitmap bitmap = Bitmap.createBitmap(right, bottom, Bitmap.Config.ARGB_4444);
+			bitmap.eraseColor(0x00000000);
 
 			canvas.setBitmap(bitmap);
 			canvas.drawText(text, 0, Math.round(size * 0.85f), strokePaint);
 			canvas.drawText(text, 0, Math.round(size * 0.85f), textPaint);
 			texture = new SmartTexture(bitmap);
 			TextureCache.add("text:" + size + " " + text, texture);
-
-			int right = texture.width;
-			boolean found = false;
-			while (!found) {
-				for (int y = 0; y < texture.height; y+= texture.height/10) {
-					if (texture.bitmap.getPixel(right - 1, y) != 0x00000000) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) right--;
-			}
-
-			int bottom = texture.height;
-			found = false;
-			while (!found) {
-				for (int x = 0; x < texture.width; x+= texture.width/10) {
-					if (texture.bitmap.getPixel(x, bottom - 1) != 0x00000000) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) bottom--;
-			}
 
 			RectF rect = texture.uvRect(0, 0, right, bottom);
 			sizeCache.put("text:" + size + " " + text, rect);
