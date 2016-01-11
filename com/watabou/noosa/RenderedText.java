@@ -63,7 +63,10 @@ public class RenderedText extends Image {
 		if (text == null || text == "") {
 			text = "";
 			width=height=0;
+			visible = false;
 			return;
+		} else {
+			visible = true;
 		}
 
 		if (TextureCache.contains("text:" + size + " " + text)){
