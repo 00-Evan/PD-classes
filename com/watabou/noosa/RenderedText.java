@@ -29,7 +29,7 @@ import java.util.HashMap;
 public class RenderedText extends Image {
 
 	private static Canvas canvas = new Canvas();
-	private static HashMap<String, RectF> sizeCache = new HashMap<>();
+	private static HashMap<String, CachedText> textCache = new HashMap<>();
 	private int size;
 	private String text;
 
@@ -60,7 +60,7 @@ public class RenderedText extends Image {
 	}
 
 	private void render(){
-		if (text == null || text == "") {
+		if ( text == null || text.equals("") ) {
 			text = "";
 			width=height=0;
 			visible = false;
@@ -69,9 +69,11 @@ public class RenderedText extends Image {
 			visible = true;
 		}
 
-		if (TextureCache.contains("text:" + size + " " + text)){
-			texture = TextureCache.get("text:" + size + " " + text);
-			frame(sizeCache.get("text:" + size + " " + text));
+		String key = "text:" + size + " " + text;
+		if (textCache.containsKey(key)){
+			CachedText text = textCache.get(key);
+			texture = text.texture;
+			frame(text.rect);
 		} else {
 
 			Paint strokePaint = new Paint();
@@ -98,8 +100,21 @@ public class RenderedText extends Image {
 			TextureCache.add("text:" + size + " " + text, texture);
 
 			RectF rect = texture.uvRect(0, 0, right, bottom);
-			sizeCache.put("text:" + size + " " + text, rect);
 			frame(rect);
+
+			CachedText toCache = new CachedText();
+			toCache.rect = rect;
+			toCache.texture = texture;
+			textCache.put("text:" + size + " " + text, toCache);
 		}
+	}
+
+	public static void clearCache(){
+		textCache.clear();
+	}
+
+	private class CachedText{
+		public SmartTexture texture;
+		public RectF rect;
 	}
 }
