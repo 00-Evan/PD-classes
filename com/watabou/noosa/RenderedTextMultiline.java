@@ -34,6 +34,7 @@ public class RenderedTextMultiline extends Component {
 
 	private int size;
 	private float zoom;
+	private int color = -1;
 
 	private static final String SPACE = " ";
 	private static final String NEWLINE = "\n";
@@ -93,6 +94,7 @@ public class RenderedTextMultiline extends Component {
 					word.hardlight(0xFFFF44);
 				} else {
 					word = new RenderedText(str, size);
+					if (color != -1) word.hardlight(color);
 				}
 				word.scale.set(zoom);
 				words.add(word);
@@ -115,6 +117,7 @@ public class RenderedTextMultiline extends Component {
 	}
 
 	public void hardlight(int color){
+		this.color = color;
 		for (RenderedText word : words) {
 			if (word != null) word.hardlight( color );
 		}
