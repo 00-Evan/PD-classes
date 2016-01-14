@@ -33,6 +33,10 @@ public class RenderedText extends Image {
 	private int size;
 	private String text;
 
+	public RenderedText( ){
+		text = null;
+	}
+
 	public RenderedText( int size ){
 		text = null;
 		this.size = size;
@@ -53,6 +57,11 @@ public class RenderedText extends Image {
 
 	public String text(){
 		return text;
+	}
+
+	public void size( int size ){
+		this.size = size;
+		render();
 	}
 
 	public float baseLine(){
