@@ -78,6 +78,10 @@ public class RenderedTextMultiline extends Component {
 		}
 	}
 
+	public int maxWidth(){
+		return maxWidth;
+	}
+
 	private void build(){
 		clear();
 		words = new ArrayList<>();
@@ -107,7 +111,7 @@ public class RenderedTextMultiline extends Component {
 		this.zoom = zoom;
 		if (words != null) {
 			for (RenderedText word : words) {
-				word.scale.set(zoom);
+				if (word != null) word.scale.set(zoom);
 			}
 		}
 	}
@@ -115,7 +119,22 @@ public class RenderedTextMultiline extends Component {
 	public void hardlight(int color){
 		if (words != null) {
 			for (RenderedText word : words) {
-				word.hardlight( color );
+				if (word != null) word.hardlight( color );
+			}
+		}
+	}
+
+	public void invert(){
+		if (words != null) {
+			for (RenderedText word : words) {
+				if (word != null) {
+					word.ra = 0.77f;
+					word.ga = 0.73f;
+					word.ba = 0.62f;
+					word.rm = -0.77f;
+					word.gm = -0.73f;
+					word.bm = -0.62f;
+				}
 			}
 		}
 	}
