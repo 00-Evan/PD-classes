@@ -30,7 +30,7 @@ public class RenderedTextMultiline extends Component {
 
 	private String text;
 	private List<String> tokens;
-	private ArrayList<RenderedText> words;
+	private ArrayList<RenderedText> words = new ArrayList<>();
 
 	private int size;
 	private float zoom;
@@ -109,18 +109,14 @@ public class RenderedTextMultiline extends Component {
 
 	public void zoom(float zoom){
 		this.zoom = zoom;
-		if (words != null) {
-			for (RenderedText word : words) {
-				if (word != null) word.scale.set(zoom);
-			}
+		for (RenderedText word : words) {
+			if (word != null) word.scale.set(zoom);
 		}
 	}
 
 	public void hardlight(int color){
-		if (words != null) {
-			for (RenderedText word : words) {
-				if (word != null) word.hardlight( color );
-			}
+		for (RenderedText word : words) {
+			if (word != null) word.hardlight( color );
 		}
 	}
 
