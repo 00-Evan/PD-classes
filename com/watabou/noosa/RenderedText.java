@@ -121,6 +121,12 @@ public class RenderedText extends Image {
 		textCache.clear();
 	}
 
+	public static void reloadCache(){
+		for (CachedText txt : textCache.values()){
+			txt.texture.reload();
+		}
+	}
+
 	private class CachedText{
 		public SmartTexture texture;
 		public RectF rect;
