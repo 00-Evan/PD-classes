@@ -119,11 +119,20 @@ public class RenderedText extends Image {
 	}
 
 	public static void clearCache(){
+		for (CachedText txt : textCache.values()){
+			txt.clear();
+		}
 		textCache.clear();
 	}
 
 	private class CachedText{
 		public SmartTexture texture;
 		public RectF rect;
+
+		public void clear(){
+			if (texture != null) texture.delete();
+			texture = null;
+			rect = null;
+		}
 	}
 }
