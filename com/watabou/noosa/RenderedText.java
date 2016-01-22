@@ -97,14 +97,14 @@ public class RenderedText extends Image {
 			textPaint.setARGB(0xff, 0xff, 0xff, 0xff);
 			textPaint.setAntiAlias(true);
 
-			int right = (int)(strokePaint.measureText(text)+ (size/10));
-			int bottom = (int)(-strokePaint.ascent() + strokePaint.descent()+ (size/10));
+			int right = (int)(strokePaint.measureText(text)+ (size/5));
+			int bottom = (int)(-strokePaint.ascent() + strokePaint.descent()+ (size/5));
 			Bitmap bitmap = Bitmap.createBitmap(right, bottom, Bitmap.Config.ARGB_4444);
 			bitmap.eraseColor(0x00000000);
 
 			canvas.setBitmap(bitmap);
-			canvas.drawText(text, 0, Math.round(size * 0.85f), strokePaint);
-			canvas.drawText(text, 0, Math.round(size * 0.85f), textPaint);
+			canvas.drawText(text, (size/10), (size * 0.85f), strokePaint);
+			canvas.drawText(text, (size/10), (size * 0.85f), textPaint);
 			texture = new SmartTexture(bitmap);
 
 			RectF rect = texture.uvRect(0, 0, right, bottom);

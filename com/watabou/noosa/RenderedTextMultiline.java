@@ -17,6 +17,7 @@
 
 package com.watabou.noosa;
 
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.noosa.ui.Component;
 
 import java.util.ArrayList;
@@ -38,7 +39,9 @@ public class RenderedTextMultiline extends Component {
 
 	private static final String SPACE = " ";
 	private static final String NEWLINE = "\n";
+	private static final String UNDERSCORE = "_";
 
+	private boolean chinese = false;
 
 	public RenderedTextMultiline(int size){
 		this.size = size;
@@ -54,11 +57,14 @@ public class RenderedTextMultiline extends Component {
 
 		if (text != null && !text.equals("")) {
 			//conversion for chinese text
-			text = text.replaceAll("，", ", ");
-			text = text.replaceAll("， _", "，_ ");
-			text = text.replaceAll("。", "。 ");
-			text = text.replaceAll("。 _", "。_ ");
-			tokens = Arrays.asList(text.split("(?<= )|(?= )|(?<=\n)|(?=\n)"));
+
+			chinese = text.replaceAll("\\p{Han}", "").length() != text.length();
+
+			if (chinese){
+				tokens = Arrays.asList(text.split(""));
+			} else {
+				tokens = Arrays.asList(text.split("(?<= )|(?= )|(?<=\n)|(?=\n)"));
+			}
 			build();
 		}
 	}
@@ -86,15 +92,30 @@ public class RenderedTextMultiline extends Component {
 	private void build(){
 		clear();
 		words = new ArrayList<>();
+		boolean highlighting = false;
 		for (String str : tokens){
-			if (!str.equals(SPACE) && !str.equals(NEWLINE)){
+			if (str.equals(UNDERSCORE)){
+				highlighting = !highlighting;
+			} else if (str.equals(NEWLINE)){
+				words.add(null);
+			} else if (!str.equals(SPACE)){
 				RenderedText word;
-				if (str.startsWith("_") && str.endsWith("_")){
+				if (str.startsWith(UNDERSCORE) && str.endsWith(UNDERSCORE)){
 					word = new RenderedText(str.substring(1, str.length()-1), size);
 					word.hardlight(0xFFFF44);
 				} else {
-					word = new RenderedText(str, size);
-					if (color != -1) word.hardlight(color);
+					if (str.startsWith(UNDERSCORE)){
+						highlighting = !highlighting;
+						word = new RenderedText(str.substring(1, str.length()), size);
+					} else if (str.endsWith(UNDERSCORE)) {
+						word = new RenderedText(str.substring(0, str.length()-1), size);
+					} else {
+						word = new RenderedText(str, size);
+					}
+					if (highlighting) word.hardlight(0xFFFF44);
+					else if (color != -1) word.hardlight(color);
+
+					if (str.endsWith(UNDERSCORE)) highlighting = !highlighting;
 				}
 				word.scale.set(zoom);
 				words.add(word);
@@ -102,8 +123,6 @@ public class RenderedTextMultiline extends Component {
 
 				if (height < word.baseLine()) height = word.baseLine();
 
-			} else if (str.equals(NEWLINE)){
-				words.add(null);
 			}
 		}
 		layout();
@@ -149,25 +168,28 @@ public class RenderedTextMultiline extends Component {
 		for (RenderedText word : words){
 			if (word == null) {
 				//newline
-				y += height;
+				y += height+0.5f;
 				x = this.x;
 				nLines++;
 			} else {
 				if (word.height() > height) height = word.baseLine();
 
 				if ((x - this.x) + word.width() > maxWidth){
-					y += height;
+					y += height+0.5f;
 					x = this.x;
 					nLines++;
 				}
 
 				word.x = x;
 				word.y = y;
-				x += word.width() + 2;
+				x += word.width();
+				if (!chinese) x ++;
+				else x--;
+
 				if ((x - this.x) > width) width = (x - this.x);
 
 			}
 		}
-		this.height = (y - this.y) + height;
+		this.height = (y - this.y) + height+0.5f;
 	}
 }
