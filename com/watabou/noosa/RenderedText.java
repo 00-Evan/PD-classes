@@ -22,14 +22,45 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import com.watabou.gltextures.SmartTexture;
-import com.watabou.gltextures.TextureCache;
+import com.watabou.glwrap.Texture;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class RenderedText extends Image {
 
 	private static Canvas canvas = new Canvas();
-	private static HashMap<String, CachedText> textCache = new HashMap<>();
+
+	//this is basically a LRU cache. capacity is determined by character count, not entry count.
+	private static LinkedHashMap<String, CachedText> textCache =
+			new LinkedHashMap<String, CachedText>(100, 0.75f, true){
+				private int cachedChars = 0;
+				private final int MAX_CACHED = 1000;
+
+				@Override
+				public CachedText put(String key, CachedText value) {
+					cachedChars += value.length;
+					return super.put(key, value);
+				}
+
+				@Override
+				public CachedText remove(Object key) {
+					CachedText removed = super.remove(key);
+					if (removed != null) cachedChars-= removed.length;
+					return removed;
+				}
+
+				@Override
+				public void clear() {
+					super.clear();
+					cachedChars = 0;
+				}
+
+				@Override
+				protected boolean removeEldestEntry(Entry eldest) {
+					return cachedChars > MAX_CACHED;
+				}
+	};
+
 	private int size;
 	private String text;
 
@@ -99,13 +130,14 @@ public class RenderedText extends Image {
 
 			int right = (int)(strokePaint.measureText(text)+ (size/5));
 			int bottom = (int)(-strokePaint.ascent() + strokePaint.descent()+ (size/5));
-			Bitmap bitmap = Bitmap.createBitmap(right, bottom, Bitmap.Config.ARGB_4444);
+			//bitmap has to be in a power of 2 for some devices (as we're using openGL methods to render to texture)
+			Bitmap bitmap = Bitmap.createBitmap(Integer.highestOneBit(right)*2, Integer.highestOneBit(bottom)*2, Bitmap.Config.ARGB_4444);
 			bitmap.eraseColor(0x00000000);
 
 			canvas.setBitmap(bitmap);
 			canvas.drawText(text, (size/10), (size * 0.85f), strokePaint);
 			canvas.drawText(text, (size/10), (size * 0.85f), textPaint);
-			texture = new SmartTexture(bitmap);
+			texture = new SmartTexture(bitmap, Texture.NEAREST, Texture.CLAMP, true);
 
 			RectF rect = texture.uvRect(0, 0, right, bottom);
 			frame(rect);
@@ -113,6 +145,7 @@ public class RenderedText extends Image {
 			CachedText toCache = new CachedText();
 			toCache.rect = rect;
 			toCache.texture = texture;
+			toCache.length = text.length();
 			textCache.put("text:" + size + " " + text, toCache);
 		}
 	}
@@ -130,5 +163,6 @@ public class RenderedText extends Image {
 	private class CachedText{
 		public SmartTexture texture;
 		public RectF rect;
+		public int length;
 	}
 }
