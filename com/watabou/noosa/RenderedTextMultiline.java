@@ -17,7 +17,6 @@
 
 package com.watabou.noosa;
 
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.noosa.ui.Component;
 
 import java.util.ArrayList;
