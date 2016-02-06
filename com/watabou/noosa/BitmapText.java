@@ -342,7 +342,7 @@ public class BitmapText extends Visual {
 			if (frames.containsKey( ch )){
 				return super.get( ch );
 			} else {
-				return super.get( '\u007F' );
+				return super.get( '?' );
 			}
 		}
 	}
