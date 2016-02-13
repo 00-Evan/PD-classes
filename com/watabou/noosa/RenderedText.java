@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.glwrap.Texture;
 
@@ -29,6 +30,8 @@ import java.util.LinkedHashMap;
 public class RenderedText extends Image {
 
 	private static Canvas canvas = new Canvas();
+
+	private static Typeface font;
 
 	//this is basically a LRU cache. capacity is determined by character count, not entry count.
 	private static LinkedHashMap<String, CachedText> textCache =
@@ -128,6 +131,11 @@ public class RenderedText extends Image {
 			textPaint.setARGB(0xff, 0xff, 0xff, 0xff);
 			textPaint.setAntiAlias(true);
 
+			if (font != null) {
+				textPaint.setTypeface(font);
+				strokePaint.setTypeface(font);
+			}
+
 			int right = (int)(strokePaint.measureText(text)+ (size/5));
 			int bottom = (int)(-strokePaint.ascent() + strokePaint.descent()+ (size/5));
 			//bitmap has to be in a power of 2 for some devices (as we're using openGL methods to render to texture)
@@ -158,6 +166,10 @@ public class RenderedText extends Image {
 		for (CachedText txt : textCache.values()){
 			txt.texture.reload();
 		}
+	}
+
+	public static void setFont(String asset){
+		font = Typeface.createFromAsset(Game.instance.getAssets(), asset);
 	}
 
 	private class CachedText{
