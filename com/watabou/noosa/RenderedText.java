@@ -23,6 +23,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import com.watabou.gltextures.SmartTexture;
+import com.watabou.glwrap.Matrix;
 import com.watabou.glwrap.Texture;
 
 import java.util.LinkedHashMap;
@@ -103,6 +104,10 @@ public class RenderedText extends Image {
 	}
 
 	private void render(){
+		render(font);
+	}
+
+	private void render(Typeface font){
 		if ( text == null || text.equals("") ) {
 			text = "";
 			width=height=0;
@@ -124,7 +129,7 @@ public class RenderedText extends Image {
 			strokePaint.setTextSize(size);
 			strokePaint.setStyle(Paint.Style.STROKE);
 			strokePaint.setAntiAlias(true);
-			strokePaint.setStrokeWidth(size / 5);
+			strokePaint.setStrokeWidth(size / 5f);
 
 			Paint textPaint = new Paint();
 			textPaint.setTextSize(size);
@@ -136,15 +141,15 @@ public class RenderedText extends Image {
 				strokePaint.setTypeface(font);
 			}
 
-			int right = (int)(strokePaint.measureText(text)+ (size/5));
-			int bottom = (int)(-strokePaint.ascent() + strokePaint.descent()+ (size/5));
+			int right = (int)(strokePaint.measureText(text)+ (size/5f));
+			int bottom = (int)(-strokePaint.ascent() + strokePaint.descent()+ (size/5f));
 			//bitmap has to be in a power of 2 for some devices (as we're using openGL methods to render to texture)
 			Bitmap bitmap = Bitmap.createBitmap(Integer.highestOneBit(right)*2, Integer.highestOneBit(bottom)*2, Bitmap.Config.ARGB_4444);
 			bitmap.eraseColor(0x00000000);
 
 			canvas.setBitmap(bitmap);
-			canvas.drawText(text, (size/10), (size * 0.85f), strokePaint);
-			canvas.drawText(text, (size/10), (size * 0.85f), textPaint);
+			canvas.drawText(text, (size/10f), size, strokePaint);
+			canvas.drawText(text, (size/10f), size, textPaint);
 			texture = new SmartTexture(bitmap, Texture.NEAREST, Texture.CLAMP, true);
 
 			RectF rect = texture.uvRect(0, 0, right, bottom);
@@ -156,6 +161,13 @@ public class RenderedText extends Image {
 			toCache.length = text.length();
 			textCache.put("text:" + size + " " + text, toCache);
 		}
+	}
+
+	@Override
+	protected void updateMatrix() {
+		super.updateMatrix();
+		//the y value is set at the top of the character, not at the top of accents.
+		Matrix.translate( matrix, 0, -(baseLine()*0.15f)/scale.y );
 	}
 
 	public static void clearCache(){
@@ -170,6 +182,7 @@ public class RenderedText extends Image {
 
 	public static void setFont(String asset){
 		font = Typeface.createFromAsset(Game.instance.getAssets(), asset);
+		clearCache();
 	}
 
 	private class CachedText{
