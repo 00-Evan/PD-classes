@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 public class RenderedText extends Image {
 
 	private static Canvas canvas = new Canvas();
+	private static Paint painter = new Paint();
 
 	private static Typeface font;
 
@@ -124,32 +125,36 @@ public class RenderedText extends Image {
 			frame(text.rect);
 		} else {
 
-			Paint strokePaint = new Paint();
-			strokePaint.setARGB(0xff, 0, 0, 0);
-			strokePaint.setTextSize(size);
-			strokePaint.setStyle(Paint.Style.STROKE);
-			strokePaint.setAntiAlias(true);
-			strokePaint.setStrokeWidth(size / 5f);
-
-			Paint textPaint = new Paint();
-			textPaint.setTextSize(size);
-			textPaint.setARGB(0xff, 0xff, 0xff, 0xff);
-			textPaint.setAntiAlias(true);
+			painter.setTextSize(size);
+			painter.setAntiAlias(true);
 
 			if (font != null) {
-				textPaint.setTypeface(font);
-				strokePaint.setTypeface(font);
+				painter.setTypeface(font);
+			} else {
+				painter.setTypeface(Typeface.DEFAULT);
 			}
 
-			int right = (int)(strokePaint.measureText(text)+ (size/5f));
-			int bottom = (int)(-strokePaint.ascent() + strokePaint.descent()+ (size/5f));
+			//paint outer strokes
+			painter.setARGB(0xff, 0, 0, 0);
+			painter.setStyle(Paint.Style.STROKE);
+			painter.setStrokeWidth(size / 5f);
+
+			int right = (int)(painter.measureText(text)+ (size/5f));
+			int bottom = (int)(-painter.ascent() + painter.descent()+ (size/5f));
+
 			//bitmap has to be in a power of 2 for some devices (as we're using openGL methods to render to texture)
 			Bitmap bitmap = Bitmap.createBitmap(Integer.highestOneBit(right)*2, Integer.highestOneBit(bottom)*2, Bitmap.Config.ARGB_4444);
 			bitmap.eraseColor(0x00000000);
 
 			canvas.setBitmap(bitmap);
-			canvas.drawText(text, (size/10f), size, strokePaint);
-			canvas.drawText(text, (size/10f), size, textPaint);
+			canvas.drawText(text, (size/10f), size, painter);
+
+			//paint inner text
+			painter.setARGB(0xff, 0xff, 0xff, 0xff);
+			painter.setStyle(Paint.Style.FILL);
+
+			canvas.drawText(text, (size/10f), size, painter);
+
 			texture = new SmartTexture(bitmap, Texture.NEAREST, Texture.CLAMP, true);
 
 			RectF rect = texture.uvRect(0, 0, right, bottom);
