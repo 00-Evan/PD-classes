@@ -172,7 +172,7 @@ public class RenderedText extends Image {
 	protected void updateMatrix() {
 		super.updateMatrix();
 		//the y value is set at the top of the character, not at the top of accents.
-		Matrix.translate( matrix, 0, -(baseLine()*0.15f)/scale.y );
+		Matrix.translate( matrix, 0, -Math.round((baseLine()*0.15f)/scale.y) );
 	}
 
 	public static void clearCache(){
