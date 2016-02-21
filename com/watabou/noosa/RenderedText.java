@@ -105,10 +105,6 @@ public class RenderedText extends Image {
 	}
 
 	private void render(){
-		render(font);
-	}
-
-	private void render(Typeface font){
 		if ( text == null || text.equals("") ) {
 			text = "";
 			width=height=0;
