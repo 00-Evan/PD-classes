@@ -65,6 +65,8 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 	protected Scene requestedScene;
 	// true if scene switch is requested
 	protected boolean requestedReset = true;
+	// callback to perform logic during scene change
+	protected SceneChangeCallback onChange;
 	// New scene class
 	protected Class<? extends Scene> sceneClass;
 	
@@ -253,10 +255,15 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 	public static void resetScene() {
 		switchScene( instance.sceneClass );
 	}
+
+	public static void switchScene(Class<? extends Scene> c) {
+		switchScene(c, null);
+	}
 	
-	public static void switchScene( Class<? extends Scene> c ) {
+	public static void switchScene(Class<? extends Scene> c, SceneChangeCallback callback) {
 		instance.sceneClass = c;
 		instance.requestedReset = true;
+		instance.onChange = callback;
 	}
 	
 	public static Scene scene() {
@@ -293,7 +300,10 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 			scene.destroy();
 		}
 		scene = requestedScene;
+		if (onChange != null) onChange.beforeCreate();
 		scene.create();
+		if (onChange != null) onChange.afterCreate();
+		onChange = null;
 		
 		Game.elapsed = 0f;
 		Game.timeScale = 1f;
@@ -319,5 +329,10 @@ public class Game extends Activity implements GLSurfaceView.Renderer, View.OnTou
 	
 	public static void vibrate( int milliseconds ) {
 		((Vibrator)instance.getSystemService( VIBRATOR_SERVICE )).vibrate( milliseconds );
+	}
+
+	public interface SceneChangeCallback{
+		void beforeCreate();
+		void afterCreate();
 	}
 }
