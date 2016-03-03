@@ -35,6 +35,7 @@ public class Texture {
 	public static final int CLAMP	= GLES20.GL_CLAMP_TO_EDGE;
 	
 	public int id;
+	private static int bound_id = 0; //id of the currently bound texture
 	
 	public boolean premultiplied = false;
 	
@@ -51,7 +52,10 @@ public class Texture {
 	}
 	
 	public void bind() {
-		GLES20.glBindTexture( GLES20.GL_TEXTURE_2D, id );
+		if (id != bound_id) {
+			GLES20.glBindTexture( GLES20.GL_TEXTURE_2D, id );
+			bound_id = id;
+		}
 	}
 	
 	public void filter( int minMode, int maxMode ) {
@@ -67,6 +71,7 @@ public class Texture {
 	}
 	
 	public void delete() {
+		if (bound_id == id) bound_id = 0;
 		int[] ids = {id};
 		GLES20.glDeleteTextures( 1, ids, 0 );
 	}

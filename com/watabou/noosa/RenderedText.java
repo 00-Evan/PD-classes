@@ -50,7 +50,10 @@ public class RenderedText extends Image {
 				@Override
 				public CachedText remove(Object key) {
 					CachedText removed = super.remove(key);
-					if (removed != null) cachedChars-= removed.length;
+					if (removed != null) {
+						cachedChars-= removed.length;
+						removed.texture.delete();
+					}
 					return removed;
 				}
 
@@ -172,6 +175,9 @@ public class RenderedText extends Image {
 	}
 
 	public static void clearCache(){
+		for (CachedText cached : textCache.values()){
+			cached.texture.delete();
+		}
 		textCache.clear();
 	}
 

@@ -79,7 +79,7 @@ public class SmartTexture extends Texture {
 	}
 	
 	public void reload() {
-		id = new SmartTexture( bitmap ).id;
+		id = new SmartTexture( bitmap, NEAREST, CLAMP, premultiplied ).id;
 		filter( fModeMin, fModeMax );
 		wrap( wModeH, wModeV );
 	}
