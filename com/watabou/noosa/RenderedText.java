@@ -174,6 +174,13 @@ public class RenderedText extends Image {
 		Matrix.translate( matrix, 0, -Math.round((baseLine()*0.15f)/scale.y) );
 	}
 
+	@Override
+	public void update() {
+		super.update();
+		//refreshes the cache entry for this text. Ensures visible text stays at the top of the LRU structure.
+		if (Game.timeTotal%1f <= Game.elapsed) textCache.get("text:" + size + " " + text);
+	}
+
 	public static void clearCache(){
 		for (CachedText cached : textCache.values()){
 			cached.texture.delete();
