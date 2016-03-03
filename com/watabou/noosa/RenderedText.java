@@ -36,10 +36,12 @@ public class RenderedText extends Image {
 	private static Typeface font;
 
 	//this is basically a LRU cache. capacity is determined by character count, not entry count.
+	//FIXME: Caching based on words is very inefficient for every language but chinese.
+	//FIXME: Need to either build my own proper glyph cache, or see what libs are available to help with this.
 	private static LinkedHashMap<String, CachedText> textCache =
-			new LinkedHashMap<String, CachedText>(100, 0.75f, true){
+			new LinkedHashMap<String, CachedText>(1500, 0.95f, true){
 				private int cachedChars = 0;
-				private final int MAX_CACHED = 1000;
+				private final int MAX_CACHED = 1150;
 
 				@Override
 				public CachedText put(String key, CachedText value) {
