@@ -27,6 +27,9 @@ public class TouchArea extends Visual implements Signal.Listener<Touchscreen.Tou
 	public Visual target;
 	
 	protected Touchscreen.Touch touch = null;
+
+	//if true, this TouchArea will always block input, even when it is inactive
+	public boolean blockWhenInactive = false;
 	
 	public TouchArea( Visual target ) {
 		super( 0, 0, 0, 0 );
@@ -46,12 +49,13 @@ public class TouchArea extends Visual implements Signal.Listener<Touchscreen.Tou
 
 	@Override
 	public void onSignal( Touch touch ) {
+
+		boolean hit = touch != null && target.overlapsScreenPoint( (int)touch.current.x, (int)touch.current.y );
 		
 		if (!isActive()) {
+			if (hit && blockWhenInactive) Touchscreen.event.cancel();
 			return;
 		}
-		
-		boolean hit = touch != null && target.overlapsScreenPoint( (int)touch.current.x, (int)touch.current.y );
 		
 		if (hit) {
 
