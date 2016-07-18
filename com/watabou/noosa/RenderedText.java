@@ -30,7 +30,10 @@ import com.watabou.gltextures.SmartTexture;
 import com.watabou.glwrap.Matrix;
 import com.watabou.glwrap.Texture;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class RenderedText extends Image {
 
@@ -40,17 +43,19 @@ public class RenderedText extends Image {
 	private static Typeface font;
 
 	//this is basically a LRU cache. capacity is determined by character count, not entry count.
+	//will attempt to clear oldest, not in use entires until there are 500 characters stored.
 	//FIXME: Caching based on words is very inefficient for every language but chinese.
-	//FIXME: Need to either build my own proper glyph cache, or see what libs are available to help with this.
 	private static LinkedHashMap<String, CachedText> textCache =
-			new LinkedHashMap<String, CachedText>(1500, 0.95f, true){
+			new LinkedHashMap<String, CachedText>(700, 0.75f, true){
 				private int cachedChars = 0;
-				private final int MAX_CACHED = 1150;
+				private final int MAX_CACHED = 500;
 
 				@Override
 				public CachedText put(String key, CachedText value) {
 					cachedChars += value.length;
-					return super.put(key, value);
+					CachedText added = super.put(key, value);
+					runGC();
+					return added;
 				}
 
 				@Override
@@ -69,14 +74,18 @@ public class RenderedText extends Image {
 					cachedChars = 0;
 				}
 
-				@Override
-				protected boolean removeEldestEntry(Entry eldest) {
-					return cachedChars > MAX_CACHED;
+				private void runGC(){
+					Iterator<Map.Entry<String, CachedText>> it = this.entrySet().iterator();
+					while (cachedChars > MAX_CACHED && it.hasNext()){
+						CachedText cached = it.next().getValue();
+						if (cached.activeTexts.isEmpty()) it.remove();
+					}
 				}
 	};
 
 	private int size;
 	private String text;
+	private CachedText cache;
 
 	public RenderedText( ){
 		text = null;
@@ -125,9 +134,10 @@ public class RenderedText extends Image {
 
 		String key = "text:" + size + " " + text;
 		if (textCache.containsKey(key)){
-			CachedText text = textCache.get(key);
-			texture = text.texture;
-			frame(text.rect);
+			cache = textCache.get(key);
+			texture = cache.texture;
+			frame(cache.rect);
+			cache.activeTexts.add(this);
 		} else {
 
 			painter.setTextSize(size);
@@ -165,11 +175,13 @@ public class RenderedText extends Image {
 			RectF rect = texture.uvRect(0, 0, right, bottom);
 			frame(rect);
 
-			CachedText toCache = new CachedText();
-			toCache.rect = rect;
-			toCache.texture = texture;
-			toCache.length = text.length();
-			textCache.put("text:" + size + " " + text, toCache);
+			cache = new CachedText();
+			cache.rect = rect;
+			cache.texture = texture;
+			cache.length = text.length();
+			cache.activeTexts = new HashSet<>();
+			cache.activeTexts.add(this);
+			textCache.put("text:" + size + " " + text, cache);
 		}
 	}
 
@@ -181,10 +193,10 @@ public class RenderedText extends Image {
 	}
 
 	@Override
-	public void update() {
-		super.update();
-		//refreshes the cache entry for this text. Ensures visible text stays at the top of the LRU structure.
-		if (Game.timeTotal%1f <= Game.elapsed) textCache.get("text:" + size + " " + text);
+	public void destroy() {
+		if (cache != null)
+			cache.activeTexts.remove(this);
+		super.destroy();
 	}
 
 	public static void clearCache(){
@@ -209,5 +221,6 @@ public class RenderedText extends Image {
 		public SmartTexture texture;
 		public RectF rect;
 		public int length;
+		public HashSet<RenderedText> activeTexts;
 	}
 }
