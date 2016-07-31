@@ -132,6 +132,9 @@ public class RenderedText extends Image {
 			visible = true;
 		}
 
+		if (cache != null)
+			cache.activeTexts.remove(this);
+
 		String key = "text:" + size + " " + text;
 		if (textCache.containsKey(key)){
 			cache = textCache.get(key);
